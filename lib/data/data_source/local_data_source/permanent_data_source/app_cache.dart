@@ -11,8 +11,8 @@ abstract class AppSharedPrefs {
   Future<void> setIsUserLoggedIn(bool value);
   bool getIsUserLoggedIn();
 
-  Future<void> setUserId(String userId);
-  String getUserId();
+  Future<void> setUserId(int userId);
+  int getUserId();
 
   Future<void> setEmail(String email);
   String getEmail();
@@ -38,8 +38,8 @@ class AppSharedPrefsImpl implements AppSharedPrefs {
       await _sharedPreferences.setString(AppCacheKeys.email, email);
 
   @override
-  Future<void> setUserId(String userId) async =>
-      await _sharedPreferences.setString(AppCacheKeys.userId, userId);
+  Future<void> setUserId(int userId) async =>
+      await _sharedPreferences.setInt(AppCacheKeys.userId, userId);
 
   @override
   bool getIsUserLoggedIn() =>
@@ -50,9 +50,8 @@ class AppSharedPrefsImpl implements AppSharedPrefs {
       _sharedPreferences.getString(AppCacheKeys.password) ?? "";
 
   @override
-  String getEmail() =>
-      _sharedPreferences.getString(AppCacheKeys.email) ?? "";
+  String getEmail() => _sharedPreferences.getString(AppCacheKeys.email) ?? "";
 
   @override
-  String getUserId() => _sharedPreferences.getString(AppCacheKeys.userId) ?? "";
+  int getUserId() => _sharedPreferences.getInt(AppCacheKeys.userId) ?? -1;
 }

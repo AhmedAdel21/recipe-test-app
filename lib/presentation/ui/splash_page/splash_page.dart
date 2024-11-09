@@ -32,6 +32,8 @@ class __SplashPageContentState extends State<_SplashPageContent> {
 
   void _goNext() {
     // Navigator.pushReplacementNamed(context, Routes.mainRoute);
+    // context.pushReplacementNamed(RoutesName.login);
+
     bool isUserLoggedIn =
         DI.getItInstance<AppSharedPrefs>().getIsUserLoggedIn();
     if (isUserLoggedIn) {
@@ -59,7 +61,7 @@ class __SplashPageContentState extends State<_SplashPageContent> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        backgroundColor: ColorConstants.white,
         body: Container(
           child: _body,
         ),
@@ -68,8 +70,11 @@ class __SplashPageContentState extends State<_SplashPageContent> {
   }
 
   Widget get _body {
-    return const Center(
-      child: Text("Splash"),
-    );
+    return Center(
+        child: SizedBox(
+      height: AppSizeConstants.s200,
+      width: AppSizeConstants.s200,
+      child: Image.asset(GifAssets.appLogo),
+    ));
   }
 }

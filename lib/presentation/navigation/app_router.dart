@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recipetestapp/data/data_source/local_data_source/permanent_data_source/app_cache.dart';
+import 'package:recipetestapp/presentation/ui/home_page/view/home_page.dart';
+import 'package:recipetestapp/presentation/ui/login_page/view/login_page.dart';
+import 'package:recipetestapp/presentation/ui/splash_page/splash_page.dart';
 
 class RoutesPath {
   static const splash = "/Splash";
@@ -28,23 +31,23 @@ class AppRouter {
     initialLocation: RoutesPath.splash,
     routes: [
       //  Splash Page
-      // GoRoute(
-      //   name: RoutesName.splash,
-      //   path: RoutesPath.splash,
-      //   builder: (context, state) => const SplashPage(),
-      // ),
+      GoRoute(
+        name: RoutesName.splash,
+        path: RoutesPath.splash,
+        builder: (context, state) => const SplashPage(),
+      ),
       //  Login Page
-      // GoRoute(
-      //   name: RoutesName.login,
-      //   path: RoutesPath.login,
-      //   builder: (context, state) => const LoginPage(),
-      // ),
+      GoRoute(
+        name: RoutesName.login,
+        path: RoutesPath.login,
+        builder: (context, state) => const LoginPage(),
+      ),
       //  Home Page
-      // GoRoute(
-      //   name: RoutesName.home,
-      //   path: RoutesPath.home,
-      //   builder: (context, state) => const HomePage(),
-      // ),
+      GoRoute(
+        name: RoutesName.home,
+        path: RoutesPath.home,
+        builder: (context, state) => const HomePage(),
+      ),
       //  Add Recipe details page
       // GoRoute(
       //   name: RoutesName.recipeDetails,
@@ -67,13 +70,13 @@ class AppRouter {
       );
     },
     redirect: (ctx, goRouterState) async {
-      final loggedIn = _appPreferences.getIsUserLoggedIn();
+      // final loggedIn = _appPreferences.getIsUserLoggedIn();
 
-      final loggingIn = goRouterState.location == RoutesPath.login;
+      // final loggingIn = goRouterState.location == RoutesPath.login;
 
-      if (!loggedIn) return loggingIn ? null : RoutesPath.login;
+      // if (!loggedIn) return loggingIn ? null : RoutesPath.login;
 
-      return null;
+      // return null;
     },
   );
 }

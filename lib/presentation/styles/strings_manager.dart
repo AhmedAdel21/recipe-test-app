@@ -9,7 +9,7 @@ class AppStrings {
   static const fieldCanNotBeEmpty = "Field can't be empty";
 
   // LoginPage Strings
-  static const usernameHintText = "Please enter username";
+  static const emailHintText = "Please enter email";
   static const passwordHintText = "Please enter password";
   static const login = "Login";
   static const logout = "Logout";

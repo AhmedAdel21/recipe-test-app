@@ -31,24 +31,18 @@ class RepositoryImpl implements Repository {
       try {
         AuthenticationResponse response =
             await _remoteDataSource.login(loginRequest);
-        if (response.status == ApiInternalStatus.success) {
-          // success -- return either right, data
-          final authenticationData = response.toDomain;
 
-          DI.getItInstance<AppSharedPrefs>().setIsUserLoggedIn(true);
-          DI
-              .getItInstance<AppSharedPrefs>()
-              .setEmail(authenticationData.userName);
-          DI
-              .getItInstance<AppSharedPrefs>()
-              .setPassword(authenticationData.password);
+        // success -- return either right, data
+        final authenticationData = response.toDomain;
 
-          return Right(authenticationData);
-        } else {
-          // failure  -- return either left, business error
-          return Left(Failure(ApiInternalStatus.failure,
-              response.message ?? ResponseMessage.none));
-        }
+        DI.getItInstance<AppSharedPrefs>().setIsUserLoggedIn(true);
+        DI.getItInstance<AppSharedPrefs>().setEmail(authenticationData.email);
+        DI
+            .getItInstance<AppSharedPrefs>()
+            .setPassword(authenticationData.password);
+        DI.getItInstance<AppSharedPrefs>().setUserId(authenticationData.userId);
+
+        return Right(authenticationData);
       } catch (error) {
         return Left(ErrorHandler.handle(error).failure);
       }

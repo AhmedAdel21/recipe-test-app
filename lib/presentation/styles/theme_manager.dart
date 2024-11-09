@@ -152,14 +152,14 @@ class ThemeManager {
         // enabled border style
         enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(
-              color: ColorConstants.white, width: AppSizeConstants.s1),
+              color: ColorConstants.black, width: AppSizeConstants.s1),
           borderRadius: BorderRadius.all(Radius.circular(AppSizeConstants.s20)),
         ),
 
         // focused border style
         focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(
-              color: ColorConstants.white, width: AppSizeConstants.s1),
+              color: ColorConstants.green, width: AppSizeConstants.s1),
           borderRadius: BorderRadius.all(Radius.circular(AppSizeConstants.s20)),
         ),
 
