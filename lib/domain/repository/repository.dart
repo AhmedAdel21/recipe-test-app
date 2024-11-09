@@ -6,4 +6,5 @@ import 'package:recipetestapp/domain/model/models.dart';
 abstract class Repository {
   Future<void> initRepo();
   Future<Either<Failure, Authentication>> login(LoginRequest loginRequest);
+  Future<Either<Failure, List<Recipe>>> getRecipes();
 }

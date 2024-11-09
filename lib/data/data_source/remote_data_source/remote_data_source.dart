@@ -5,6 +5,7 @@ import 'package:recipetestapp/data/response/responses.dart';
 
 abstract class RemoteDataSource {
   Future<AuthenticationResponse> login(LoginRequest loginRequest);
+  Future<List<RecipeResponse>> getRecipes();
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -19,4 +20,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     await Future.delayed(const Duration(seconds: 1));
     return AuthenticationResponse(1, "Ahmed", "password");
   }
+
+  @override
+  Future<List<RecipeResponse>> getRecipes() => _appServiceClient.getRecipes();
 }

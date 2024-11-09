@@ -1,4 +1,5 @@
 import 'package:recipetestapp/app/di.dart';
+import 'package:recipetestapp/app/global_functions.dart';
 import 'package:recipetestapp/data/data_source/local_data_source/local_data_source.dart';
 import 'package:recipetestapp/data/data_source/local_data_source/permanent_data_source/app_cache.dart';
 import 'package:recipetestapp/data/data_source/remote_data_source/remote_data_source.dart';
@@ -43,6 +44,25 @@ class RepositoryImpl implements Repository {
         DI.getItInstance<AppSharedPrefs>().setUserId(authenticationData.userId);
 
         return Right(authenticationData);
+      } catch (error) {
+        return Left(ErrorHandler.handle(error).failure);
+      }
+    } else {
+      // failure -- return either left, internet connection error
+      return Left(DataSource.noInternetConnection.getFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Recipe>>> getRecipes() async {
+    if (await _networkInfo.isConnected) {
+      try {
+        List<RecipeResponse> response = await _remoteDataSource.getRecipes();
+        securePrint("response: $response");
+        // success -- return either right, data
+        List<Recipe> recipes = response.map((e) => e.toDomain).toList();
+        securePrint("recipes: $recipes");
+        return Right(recipes);
       } catch (error) {
         return Left(ErrorHandler.handle(error).failure);
       }
