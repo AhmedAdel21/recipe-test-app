@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
-import 'package:recipetestapp/app/di.dart';
-import 'package:recipetestapp/data/data_source/local_data_source/permanent_data_source/app_cache.dart';
 import 'package:recipetestapp/presentation/navigation/app_router.dart';
 import 'package:recipetestapp/presentation/styles/styles.dart';
 
@@ -19,8 +17,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final AppSharedPrefs _appCache = DI.getItInstance<AppSharedPrefs>();
-  late final _appRouter = AppRouter(_appCache);
+  late final _appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {

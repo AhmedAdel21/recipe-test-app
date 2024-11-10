@@ -21,9 +21,9 @@ extension RecipeResponseMapper on RecipeResponse {
         weeks: weeks.map((e) => e.orEmpty).toList(),
         carbos: carbos.orEmpty,
         fibers: fibers.orEmpty,
-        rating: rating.orMinusOne,
+        rating: rating ?? 0,
         country: country.orEmpty,
-        ratings: ratings.orMinusOne,
+        ratings: ratings ?? 0,
         calories: calories.orEmpty,
         headline: headline.orEmpty,
         keywords: keywords.map((e) => e.orEmpty).toList(),
@@ -34,7 +34,7 @@ extension RecipeResponseMapper on RecipeResponse {
         description: description.orEmpty,
         highlighted: highlighted ?? false,
         ingredients: ingredients.map((e) => e.orEmpty).toList(),
-        incompatibilities: incompatibilities.orMinusOne,
+        incompatibilities: incompatibilities,
         deliverableIngredients:
             deliverableIngredients.map((e) => e.orEmpty).toList(),
         undeliverableIngredients:

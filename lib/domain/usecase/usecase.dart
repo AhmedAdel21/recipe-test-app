@@ -8,3 +8,4 @@ import 'package:recipetestapp/domain/repository/repository.dart';
 part 'base_usecase.dart';
 part 'inputs.dart';
 part 'login_usecase.dart';
+part 'get_recipes_usecase.dart';
