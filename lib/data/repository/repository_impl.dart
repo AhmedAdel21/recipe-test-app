@@ -57,11 +57,21 @@ class RepositoryImpl implements Repository {
     if (await _networkInfo.isConnected) {
       try {
         List<RecipeResponse> response = await _remoteDataSource.getRecipes();
-        // securePrint("response: $response");
         // success -- return either right, data
-        List<Recipe> recipes = response.map((e) => e.toDomain).toList();
+        // List<Recipe> recipes = response.map((e) => e.toDomain).toList();
+
+        Map<String, Recipe> recipes = Map.fromEntries(
+          response.map((res) => MapEntry(res.id ?? "", res.toDomain)),
+        );
+
+        List<String> recipesMarkedAsFavorites =
+            await _localDataSource.getFavoritesRecipeIds();
+
+        for (var resId in recipesMarkedAsFavorites) {
+          recipes[resId]?.isFavorite = true;
+        }
         // securePrint("recipes: $recipes");
-        return Right(recipes);
+        return Right(recipes.values.toList());
       } catch (error) {
         return Left(ErrorHandler.handle(error).failure);
       }

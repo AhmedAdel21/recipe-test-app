@@ -55,7 +55,9 @@ class Recipe extends Equatable {
   final dynamic incompatibilities;
   final List<String> deliverableIngredients;
   final List<String> undeliverableIngredients;
-  const Recipe({
+  bool isFavorite;
+  Recipe({
+    this.isFavorite = false,
     required this.id,
     required this.fats,
     required this.name,
