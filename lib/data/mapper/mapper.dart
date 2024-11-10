@@ -30,7 +30,7 @@ extension RecipeResponseMapper on RecipeResponse {
         products: products.map((e) => e.orEmpty).toList(),
         proteins: proteins.orEmpty,
         favorites: favorites.orMinusOne,
-        difficulty: difficulty.orMinusOne,
+        difficulty: Difficulty.fromCode(difficulty.orMinusOne),
         description: description.orEmpty,
         highlighted: highlighted ?? false,
         ingredients: ingredients.map((e) => e.orEmpty).toList(),

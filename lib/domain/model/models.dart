@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 
 class Authentication extends Equatable {
   final int userId;
@@ -12,6 +13,21 @@ class Authentication extends Equatable {
         email,
         password,
       ];
+}
+
+enum Difficulty {
+  easy(0, "Easy"),
+  medium(1, "Medium"),
+  hard(2, "Hard"),
+  none(-1, "Not found"),
+  ;
+
+  final String text;
+  final int code;
+  const Difficulty(this.code, this.text);
+
+  factory Difficulty.fromCode(int jsonCode) =>
+      values.firstWhere((dif) => dif.code == jsonCode, orElse: () => none);
 }
 
 class Recipe extends Equatable {
@@ -32,7 +48,7 @@ class Recipe extends Equatable {
   final List<String> products;
   final String proteins;
   final int favorites;
-  final int difficulty;
+  final Difficulty difficulty;
   final String description;
   final bool highlighted;
   final List<String> ingredients;

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:recipetestapp/data/data_source/local_data_source/permanent_data_source/app_cache.dart';
+import 'package:recipetestapp/domain/model/models.dart';
 import 'package:recipetestapp/presentation/ui/home_page/view/home_page.dart';
 import 'package:recipetestapp/presentation/ui/login_page/view/login_page.dart';
+import 'package:recipetestapp/presentation/ui/recipe_details_page/view/recipe_details_page.dart';
 import 'package:recipetestapp/presentation/ui/splash_page/splash_page.dart';
 
 class RoutesPath {
@@ -22,8 +23,7 @@ class RoutesName {
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class AppRouter {
-  final AppSharedPrefs _appPreferences;
-  AppRouter(this._appPreferences);
+  AppRouter();
 
   late final router = GoRouter(
     navigatorKey: navigatorKey,
@@ -48,14 +48,15 @@ class AppRouter {
         path: RoutesPath.home,
         builder: (context, state) => const HomePage(),
       ),
-      //  Add Recipe details page
-      // GoRoute(
-      //   name: RoutesName.recipeDetails,
-      //   path: RoutesPath.recipeDetails,
-      //   builder: (context, state) {
-      //     return recipeDetailsPage(Input);
-      //   },
-      // ),
+      //  Recipe details page
+      GoRoute(
+        name: RoutesName.recipeDetails,
+        path: RoutesPath.recipeDetails,
+        builder: (context, state) {
+          final recipe = state.extra as Recipe;
+          return RecipeDetailsPage(recipe);
+        },
+      ),
     ],
     errorPageBuilder: (context, state) {
       return MaterialPage(
