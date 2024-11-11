@@ -52,7 +52,7 @@ class RecipeEntitiesContainerAdapter
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return RecipeEntitiesContainer()
-      ..recipeEntities = (fields[0] as Map).cast<String, RecipeEntity>();
+      ..recipeEntities = (fields[0] as Map).cast<String, String>();
   }
 
   @override

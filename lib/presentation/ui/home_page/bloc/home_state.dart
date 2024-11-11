@@ -9,15 +9,15 @@ enum HomeStateStatus {
 
 final class HomeState extends Equatable {
   const HomeState({
-    this.recipes = const [],
+    this.recipes = const {},
     this.state = HomeStateStatus.idle,
     this.errorMessage = "",
   });
   final HomeStateStatus state;
-  final List<Recipe> recipes;
+  final Map<String, Recipe> recipes;
   final String errorMessage;
   HomeState copyWith({
-    List<Recipe>? recipes,
+    Map<String, Recipe>? recipes,
     HomeStateStatus? state,
     String? errorMessage,
   }) {
@@ -28,6 +28,7 @@ final class HomeState extends Equatable {
     );
   }
 
+  List<Recipe> get getListOfRecipe => recipes.values.toList();
   @override
   String toString() =>
       "HomeState(state: $state, recipes: $recipes, errorMessage: $errorMessage)";

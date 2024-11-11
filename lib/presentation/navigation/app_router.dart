@@ -77,7 +77,7 @@ class AppRouter {
 
       // if (!loggedIn) return loggingIn ? null : RoutesPath.login;
 
-      // return null;
+      return null;
     },
   );
 }

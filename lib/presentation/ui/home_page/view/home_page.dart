@@ -3,20 +3,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:recipetestapp/app/di.dart';
-import 'package:recipetestapp/app/global_functions.dart';
 import 'package:recipetestapp/domain/model/models.dart';
 import 'package:recipetestapp/presentation/navigation/app_navigation_manager.dart';
 import 'package:recipetestapp/presentation/navigation/app_router.dart';
 import 'package:recipetestapp/presentation/styles/styles.dart';
 import 'package:recipetestapp/presentation/ui/common/state_renderer/state_renderer_impl.dart';
 import 'package:recipetestapp/presentation/ui/home_page/bloc/home_bloc.dart';
+import 'package:recipetestapp/presentation/ui/recipe_details_page/bloc/recipe_details_page_bloc.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   PlatformAppBar get _appBar {
     return PlatformAppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorConstants.white,
       title: Row(
         children: [
           Container(
@@ -30,7 +30,7 @@ class HomePage extends StatelessWidget {
           ),
           const Text(
             "Recipe App",
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: ColorConstants.black),
           ),
         ],
       ),
@@ -92,10 +92,8 @@ class __HomeContentState extends State<_HomeContent> {
 
   @override
   Widget build(BuildContext context) {
-    // _bloc.add(const HomeGetRecipes());
     return BlocListener<HomeBloc, HomeState>(
       listener: (context, state) {
-        securePrint("UI state.state: ${state.state}");
         switch (state.state) {
           case HomeStateStatus.idle:
             dismissDialog();
@@ -127,81 +125,123 @@ class __HomeContentState extends State<_HomeContent> {
         ),
         padding: const EdgeInsets.all(8.0), // padding around the grid
 
-        itemCount: _bloc.state.recipes.length,
+        itemCount: _bloc.state.getListOfRecipe.length,
         itemBuilder: (context, index) {
-          Recipe recipe = _bloc.state.recipes[index];
-
-          return _getCard(recipe);
+          Recipe recipe = _bloc.state.getListOfRecipe[index];
+          return BlocProvider(
+            create: (context) => RecipeCubit(recipe),
+            child: _RecipeCard(recipe: recipe),
+          );
         },
       ),
     );
   }
+}
 
-  Widget _getCard(Recipe recipe) => GestureDetector(
-        onTap: () => DI.getItInstance<AppNavigationManager>().navigateToPage(
-              RoutesName.recipeDetails,
-              extra: recipe,
-            ),
-        child: Card(
-          elevation: 4,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(15)),
-                child: Image.network(
-                  recipe.image,
-                  height: 150,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Center(
-                      child: Text(
-                        recipe.name,
-                        maxLines: 2,
-                        softWrap: true,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+class _RecipeCard extends StatelessWidget {
+  const _RecipeCard({
+    super.key,
+    required this.recipe,
+  });
+
+  final Recipe recipe;
+
+  @override
+  Widget build(BuildContext context) => Stack(
+        children: [
+          GestureDetector(
+            onTap: () =>
+                DI.getItInstance<AppNavigationManager>().navigateToPage(
+                      RoutesName.recipeDetails,
+                      extra: context.read<RecipeCubit>().state,
                     ),
-                    // const Spacer(),
-                    Row(
+            child: Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(15)),
+                    child: Image.network(
+                      recipe.image,
+                      height: 150,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        RatingBarIndicator(
-                          rating: recipe.rating.toDouble(),
-                          itemBuilder: (context, index) => const Icon(
-                            Icons.star,
-                            color: Colors.amber,
+                        Center(
+                          child: Text(
+                            recipe.name,
+                            maxLines: 2,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                          itemCount: 5,
-                          itemSize: 20.0,
-                          direction: Axis.horizontal,
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          recipe.rating.toStringAsFixed(1),
-                          style: const TextStyle(fontSize: 16),
+                        // const Spacer(),
+                        Row(
+                          children: [
+                            RatingBarIndicator(
+                              rating: recipe.rating.toDouble(),
+                              itemBuilder: (context, index) => const Icon(
+                                Icons.star,
+                                color: ColorConstants.ratingStarsColor,
+                              ),
+                              itemCount: 5,
+                              itemSize: 20.0,
+                              direction: Axis.horizontal,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              recipe.rating.toStringAsFixed(1),
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+          BlocBuilder<RecipeCubit, Recipe>(
+            builder: (context, state) {
+              Icon icon = const Icon(
+                Icons.favorite_border_outlined,
+                color: ColorConstants.black,
+                size: 30,
+              );
+              if (state.isFavorite ?? false) {
+                icon = const Icon(
+                  Icons.favorite_sharp,
+                  color: ColorConstants.favoriteColor,
+                  size: 30,
+                );
+              }
+              return Positioned(
+                left: 10,
+                top: 10,
+                child: GestureDetector(
+                  onTap: () =>
+                      context.read<RecipeCubit>().toggleFavoriteState(),
+                  child: icon,
+                ),
+              );
+            },
+          ),
+        ],
       );
 }

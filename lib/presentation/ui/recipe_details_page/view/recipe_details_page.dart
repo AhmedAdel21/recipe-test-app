@@ -11,16 +11,16 @@ class RecipeDetailsPage extends StatelessWidget {
   const RecipeDetailsPage(this.recipe, {super.key});
   PlatformAppBar get _appBar {
     return PlatformAppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorConstants.white,
       title: Text(
         recipe.name,
-        style: const TextStyle(color: Colors.black),
+        style: const TextStyle(color: ColorConstants.black),
       ),
       material: (context, platform) {
         return MaterialAppBarData(
           elevation: 0,
           leadingWidth: 80,
-          foregroundColor: Colors.black,
+          foregroundColor: ColorConstants.black,
         );
       },
       cupertino: (context, platform) {
@@ -33,11 +33,11 @@ class RecipeDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlatformScaffold(
       appBar: _appBar,
-      backgroundColor: const Color.fromARGB(255, 227, 233, 232),
+      backgroundColor: ColorConstants.backGroundGreyColor,
       body: Padding(
         padding: const EdgeInsets.all(AppPaddingConstants.p12),
         child: BlocProvider(
-          create: (context) => RecipeDetailsPageBloc(recipe),
+          create: (context) => RecipeCubit(recipe),
           child: const _RecipeDetailsPageContent(),
         ),
       ),
@@ -54,12 +54,11 @@ class _RecipeDetailsPageContent extends StatefulWidget {
 }
 
 class __RecipeDetailsPageContentState extends State<_RecipeDetailsPageContent> {
-  late final RecipeDetailsPageBloc _bloc;
+  late final RecipeCubit _bloc;
   late final Recipe recipe;
   void _bind() {
-    _bloc = context.read<RecipeDetailsPageBloc>();
-    recipe = _bloc.state.recipe;
-    // _bloc.add(const HomeGetRecipes());
+    _bloc = context.read<RecipeCubit>();
+    recipe = _bloc.state;
   }
 
   @override
@@ -223,7 +222,7 @@ class __RecipeDetailsPageContentState extends State<_RecipeDetailsPageContent> {
             rating: recipe.rating.toDouble(),
             itemBuilder: (context, index) => const Icon(
               Icons.star,
-              color: Colors.amber,
+              color: ColorConstants.ratingStarsColor,
             ),
             itemCount: 5,
             itemSize: 24.0,
@@ -275,6 +274,31 @@ class __RecipeDetailsPageContentState extends State<_RecipeDetailsPageContent> {
                 ),
               ],
             ),
+          ),
+          BlocBuilder<RecipeCubit, Recipe>(
+            builder: (context, state) {
+              // context.read<HomeBloc>().add(HomeRecipeStatChanged(state));
+              Icon icon = const Icon(
+                Icons.favorite_border_outlined,
+                color: ColorConstants.black,
+                size: 50,
+              );
+              if (state.isFavorite ?? false) {
+                icon = const Icon(
+                  Icons.favorite_sharp,
+                  color: ColorConstants.favoriteColor,
+                  size: 50,
+                );
+              }
+              return Positioned(
+                left: 10,
+                top: 10,
+                child: GestureDetector(
+                  onTap: () => _bloc.toggleFavoriteState(),
+                  child: icon,
+                ),
+              );
+            },
           ),
         ],
       );

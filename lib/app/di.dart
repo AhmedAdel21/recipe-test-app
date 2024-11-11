@@ -61,5 +61,7 @@ class DI {
         .registerLazySingleton<LoginUseCase>(() => LoginUseCase(_instance()));
     _instance
         .registerLazySingleton<GetRecipesUsecase>(() => GetRecipesUsecase(_instance()));
+    _instance
+        .registerLazySingleton<SetRecipeStateUseCase>(() => SetRecipeStateUseCase(_instance()));
   }
 }

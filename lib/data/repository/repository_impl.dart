@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:recipetestapp/app/di.dart';
 import 'package:recipetestapp/data/data_source/local_data_source/local_data_source.dart';
 import 'package:recipetestapp/data/data_source/local_data_source/permanent_data_source/app_cache.dart';
@@ -16,6 +18,7 @@ class RepositoryImpl implements Repository {
   final LocalDataSource _localDataSource;
   final RemoteDataSource _remoteDataSource;
   final NetworkInfo _networkInfo;
+  StreamController<Recipe> _controller = StreamController<Recipe>();
   RepositoryImpl(
       this._localDataSource, this._remoteDataSource, this._networkInfo);
 
@@ -53,7 +56,7 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, List<Recipe>>> getRecipes() async {
+  Future<Either<Failure, Map<String, Recipe>>> getRecipes() async {
     if (await _networkInfo.isConnected) {
       try {
         List<RecipeResponse> response = await _remoteDataSource.getRecipes();
@@ -68,10 +71,12 @@ class RepositoryImpl implements Repository {
             await _localDataSource.getFavoritesRecipeIds();
 
         for (var resId in recipesMarkedAsFavorites) {
-          recipes[resId]?.isFavorite = true;
+          if (recipes[resId] != null) {
+            recipes[resId] = recipes[resId]!.copyWith(isFavorite: true);
+          }
         }
         // securePrint("recipes: $recipes");
-        return Right(recipes.values.toList());
+        return Right(recipes);
       } catch (error) {
         return Left(ErrorHandler.handle(error).failure);
       }
@@ -80,6 +85,24 @@ class RepositoryImpl implements Repository {
       return Left(DataSource.noInternetConnection.getFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, bool>> setRecipeState(Recipe state) async {
+    try {
+      if (state.isFavorite ?? false) {
+        await _localDataSource.saveRecipeId(state.id);
+      } else {
+        await _localDataSource.removeRecipeId(state.id);
+      }
+      _controller.add(state);
+      return right(true);
+    } catch (e) {
+      return Left(Failure(-1, "Can not access local data base"));
+    }
+  }
+
+  @override
+  Stream<Recipe> get onNewRecipe => _controller.stream;
 }
 
 class RepositoryErrorCodesConstant {

@@ -13,10 +13,15 @@ class RecipeEntity extends HiveObject {
 class RecipeEntitiesContainer extends HiveObject {
   RecipeEntitiesContainer();
   @HiveField(0)
-  Map<String, RecipeEntity> recipeEntities = {};
+  Map<String, String> recipeEntities = {};
 
-  Future<void> addRecipe(RecipeEntity recipe) async {
-    recipeEntities[recipe.id] = recipe;
+  Future<void> saveRecipeId(String recipeId) async {
+    recipeEntities[recipeId] = recipeId;
+    await save();
+  }
+
+  Future<void> removeRecipeId(String recipeId) async {
+    recipeEntities.remove(recipeId);
     await save();
   }
 

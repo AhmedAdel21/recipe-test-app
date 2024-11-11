@@ -1,12 +1,11 @@
 import 'package:recipetestapp/data/data_source/local_data_source/permanent_data_source/hive_database.dart/hive_classes.dart';
 import 'package:recipetestapp/data/data_source/local_data_source/permanent_data_source/hive_database.dart/hive_helper.dart';
-import 'package:recipetestapp/domain/model/models.dart';
-
 import 'permanent_data_source/hive_database.dart/hive_database_manager.dart';
 
 abstract class LocalDataSource {
   Future<void> initLocalDataSource();
-  Future<void> saveRecipeToDataBase(Recipe recipes);
+  Future<void> saveRecipeId(String recipeId);
+  Future<void> removeRecipeId(String recipeId);
   Future<List<String>> getFavoritesRecipeIds();
 }
 
@@ -29,12 +28,24 @@ class LocalDataSourceImpl implements LocalDataSource {
   }
 
   @override
-  Future<void> saveRecipeToDataBase(Recipe recipes) async {
+  Future<void> saveRecipeId(String recipeId) async {
     try {
       RecipeEntitiesContainer recipesContainer =
           await _hiveDataBaseManager.getRecipeEntitiesContainer;
 
-      await recipesContainer.addRecipe(recipes.toDataBaseEntity);
+      await recipesContainer.saveRecipeId(recipeId);
+    } on HiveDataBaseException catch (e) {
+      _hiveDataBaseErrorHandler(e);
+    }
+  }
+
+  @override
+  Future<void> removeRecipeId(String recipeId) async {
+    try {
+      RecipeEntitiesContainer recipesContainer =
+          await _hiveDataBaseManager.getRecipeEntitiesContainer;
+
+      await recipesContainer.removeRecipeId(recipeId);
     } on HiveDataBaseException catch (e) {
       _hiveDataBaseErrorHandler(e);
     }

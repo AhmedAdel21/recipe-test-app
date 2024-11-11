@@ -8,6 +8,7 @@ class HomeGetRecipes extends HomeEvent {
   const HomeGetRecipes();
 }
 
-class HomeMarkRecipeAsFavorite extends HomeEvent {
-  const HomeMarkRecipeAsFavorite();
+class HomeRecipeStatChanged extends HomeEvent {
+  final Recipe recipe;
+  const HomeRecipeStatChanged(this.recipe);
 }
